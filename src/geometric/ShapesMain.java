@@ -294,7 +294,7 @@ public class ShapesMain extends JFrame implements GLEventListener {
                     triangRb.setSelected(false);
                     sphereRb.setSelected(false);
                     cubeRb.setSelected(false);
-                    shape = new Text3D();
+                    shape = new Text2D();
                     textRb.setSelected(true);
 
                 }

@@ -37,7 +37,7 @@ import javax.swing.JFrame;
  *
  * @author frank
  */
-public class Text3D implements IShape {
+public class Text2D implements IShape {
 
     private int speed = 0;
     private float rtri = 0.0f;
