@@ -5,94 +5,121 @@
  */
 package geometric;
 
+import com.jogamp.opengl.GL;
+import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GL2;
-import static com.jogamp.opengl.GL2ES3.GL_QUADS;
+import com.jogamp.opengl.GL2ES1;
+import com.jogamp.opengl.fixedfunc.GLLightingFunc;
+import com.jogamp.opengl.glu.GLU;
+import java.awt.Color;
 
 /**
  *
  * @author frank
  */
 public class Cube implements IShape {
-    
+
     private int speed = 0;
-    
-    private float rtri =0.0f;
-     private int texture;
-     
+    private float rtri = 0.0f;
+    private int texture;
+    private float angleCube = 0;
+    private float blue = 1;
+    private float green = 1;
+    private float red = 1;
+    private boolean flag = true; // true: color; false: texture
+
     @Override
     public void draw(GL2 gl) {
-//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//      GL2 gl = drawable.getGL().getGL2();  // get the OpenGL 2 graphics context
         gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
+        gl.glLoadIdentity(); // Reset The View
+        gl.glTranslatef(-0.5f, 0.0f, -6.0f); // Move the cube
+        gl.glRotatef(rtri, 0.0f, 1.0f, 0.0f);
+        if (!flag) {
+            gl.glBindTexture(GL2.GL_TEXTURE_2D, texture);
+        } else {
+            gl.glColor3f(red, green, blue); // Color
+        }
 
-        // ----- Render the Pyramid -----
-//      gl.glLoadIdentity();                 // reset the model-view matrix
-//      gl.glTranslatef(-1.6f, 0.0f, -6.0f); // translate left and into the screen
-//      gl.glRotatef(anglePyramid, -0.2f, 1.0f, 0.0f); // rotate about the y-axis
-// 
-//      gl.glBegin(GL_TRIANGLES); // of the pyramid   
-        // ----- Render the Color Cube -----
-        gl.glLoadIdentity();                // reset the current model-view matrix
-        gl.glTranslatef(1.6f, 0.0f, -7.0f); // translate right and into the screen
-//      gl.glRotatef(angleCube, 1.0f, 1.0f, 1.0f); // rotate about the x, y and z-axes
+        gl.glLoadIdentity();                // redefine a matriz atual da vista do modelo 
 
-        gl.glBegin(GL_QUADS); // of the color cube
+        gl.glTranslatef(-0.5f, 0.0f, -6.0f); // traduzir para a direita e para a tela 
+        gl.glRotatef(angleCube, 1.0f, 1.0f, 1.0f); // gira em torno dos eixos x, y e z
 
-        // Top-face
-        gl.glColor3f(0.0f, 1.0f, 0.0f); // green
+        gl.glBegin(GL2.GL_QUADS);
+
+        // Face superior 
         gl.glVertex3f(1.0f, 1.0f, -1.0f);
         gl.glVertex3f(-1.0f, 1.0f, -1.0f);
         gl.glVertex3f(-1.0f, 1.0f, 1.0f);
         gl.glVertex3f(1.0f, 1.0f, 1.0f);
 
-        // Bottom-face
-        gl.glColor3f(1.0f, 0.5f, 0.0f); // orange
+        // Face inferior 
         gl.glVertex3f(1.0f, -1.0f, 1.0f);
         gl.glVertex3f(-1.0f, -1.0f, 1.0f);
         gl.glVertex3f(-1.0f, -1.0f, -1.0f);
-        gl.glVertex3f(1.0f, -1.0f, -1.0f);
+        gl.glVertex3f(1.0f, -1.0f, -1.0f); 
 
-        // Front-face
-        gl.glColor3f(1.0f, 0.0f, 0.0f); // red
         gl.glVertex3f(1.0f, 1.0f, 1.0f);
         gl.glVertex3f(-1.0f, 1.0f, 1.0f);
         gl.glVertex3f(-1.0f, -1.0f, 1.0f);
         gl.glVertex3f(1.0f, -1.0f, 1.0f);
 
-        // Back-face
-        gl.glColor3f(1.0f, 1.0f, 0.0f); // yellow
+        // Face 
         gl.glVertex3f(1.0f, -1.0f, -1.0f);
         gl.glVertex3f(-1.0f, -1.0f, -1.0f);
         gl.glVertex3f(-1.0f, 1.0f, -1.0f);
         gl.glVertex3f(1.0f, 1.0f, -1.0f);
 
-        // Left-face
-        gl.glColor3f(0.0f, 0.0f, 1.0f); // blue
+        // Face esquerda 
         gl.glVertex3f(-1.0f, 1.0f, 1.0f);
         gl.glVertex3f(-1.0f, 1.0f, -1.0f);
         gl.glVertex3f(-1.0f, -1.0f, -1.0f);
         gl.glVertex3f(-1.0f, -1.0f, 1.0f);
 
-        // Right-face
-        gl.glColor3f(1.0f, 0.0f, 1.0f); // magenta
         gl.glVertex3f(1.0f, 1.0f, -1.0f);
         gl.glVertex3f(1.0f, 1.0f, 1.0f);
         gl.glVertex3f(1.0f, -1.0f, 1.0f);
         gl.glVertex3f(1.0f, -1.0f, -1.0f);
 
-        gl.glEnd(); // of the color cube
+        gl.glEnd();
+        //rtri += speed;
+        angleCube += speed;
+    }
+
+    public void init(GLAutoDrawable drawable) {
+        GL2 gl = drawable.getGL().getGL2();      // obtém o contexto gráfico OpenGL 
+        GLU glu = new GLU(); // obtenha GL Utilities 
+        gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f); // definir cor de fundo (claro) 
+        gl.glClearDepth(1.0f);      // defina um valor de profundidade claro para o mais distante 
+        gl.glEnable(GL.GL_DEPTH_TEST); // ativa o teste de profundidade 
+        gl.glDepthFunc(GL.GL_LEQUAL);  // o tipo de teste de profundidade para fazer 
+        gl.glHint(GL2ES1.GL_PERSPECTIVE_CORRECTION_HINT, GL.GL_NICEST); // melhor correção de perspectiva 
+        gl.glShadeModel(GLLightingFunc.GL_SMOOTH); // combina bem as cores e suaviza a iluminação
     }
 
     @Override
     public void setSpeed(int speed) {
-//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         this.speed = speed;
     }
 
     @Override
     public void setTexture(int texture) {
-//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         this.texture = texture;
+        this.flag = false;
+    }
+
+    @Override
+    public void setColor(Color color) {
+        try {
+            this.red = (float) color.getRed() / 255;
+            this.green = (float) color.getGreen() / 255;
+            this.blue = (float) color.getBlue() / 255;
+            this.flag = true;
+
+        } catch (Exception e) {
+            System.out.println("Erro" + e.getMessage());
+
+        }
 
     }
 }

@@ -6,7 +6,7 @@
 package geometric;
 
 import com.jogamp.opengl.GL2;
-
+import java.awt.Color;
 /**
  *
  * @author frank
@@ -14,9 +14,12 @@ import com.jogamp.opengl.GL2;
 public class Triangle implements IShape{
 
     private int speed = 0;
-    
-    private float rtri =0.0f;
-     private int texture;
+    private float rtri = 0.0f;
+    private int texture;
+    private float blue = 1;
+    private float green = 1;
+    private float red = 1;
+    private boolean flag = true; // true: color; false: texture
     
 
     @Override
@@ -73,6 +76,19 @@ public class Triangle implements IShape{
     @Override
     public void setTexture(int texture) {
         this.texture = texture;
+    }
+
+    @Override
+    public void setColor(Color color) {
+         try {
+            this.red = (float) color.getRed()/255;
+            this.green = (float) color.getGreen()/255;
+            this.blue = (float) color.getBlue()/255;
+            this.flag = true;
+            
+        } catch (Exception e) {
+             System.out.println("Erro" + e.getMessage());
+        }
     }
     
 }
